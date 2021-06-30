@@ -4,19 +4,17 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import "./App.css";
 import Results from "./components/result/Results";
-import Footer from "./components/footer/Footer";
 import Header from "./components/header/Header";
 
 function App() {
 	const [word, setWord] = useState("");
 	const [meanings, setMeanings] = useState([]);
-	const [category, setCategory] = useState("en");
-	const [LightTheme, setLightTheme] = useState(false);
+	const [darkTheme, setDarkTheme] = useState(false);
 
 	const dictionaryApi = async () => {
 		try {
 			const data = await axios.get(
-				`https://api.dictionaryapi.dev/api/v2/entries/${category}/${word}`
+				`https://api.dictionaryapi.dev/api/v2/entries/en_US/${word}`
 			);
 			setMeanings(data.data);
 		} catch (error) {
@@ -29,7 +27,7 @@ function App() {
 	useEffect(() => {
 		dictionaryApi();
 		// eslint-disable-next-line
-	}, [word, category]);
+	}, [word]);
 
 	const PurpleSwitch = withStyles({
 		switchBase: {
@@ -50,8 +48,8 @@ function App() {
 			className='App'
 			style={{
 				height: "100vh",
-				backgroundColor: LightTheme ? "#fff" : "#282c34",
-				color: LightTheme ? "black" : "white",
+				backgroundColor: darkTheme ? "#282c34" : "#fff",
+				color: darkTheme ? "white" : "black",
 				transition: "all 0.5s linear",
 			}}
 		>
@@ -67,30 +65,22 @@ function App() {
 				<div
 					style={{ position: "absolute", top: 0, right: 15, paddingTop: 10 }}
 				>
-					<span>{LightTheme ? "Dark" : "Light"} Mode</span>
+					<span>{darkTheme ? "Light" : "Dark"} Mode</span>
 					<PurpleSwitch
-						checked={LightTheme}
-						onChange={() => setLightTheme(!LightTheme)}
+						checked={darkTheme}
+						onChange={() => setDarkTheme(!darkTheme)}
 					/>
 				</div>
 				<Header
 					setWord={setWord}
-					category={category}
-					setCategory={setCategory}
 					word={word}
 					setMeanings={setMeanings}
-					LightTheme={LightTheme}
+					darkTheme={darkTheme}
 				/>
 				{meanings && (
-					<Results
-						meanings={meanings}
-						word={word}
-						LightTheme={LightTheme}
-						category={category}
-					/>
+					<Results meanings={meanings} word={word} darkTheme={darkTheme} />
 				)}
 			</Container>
-			<Footer />
 		</div>
 	);
 }
