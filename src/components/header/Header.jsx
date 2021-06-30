@@ -1,32 +1,17 @@
 import { createMuiTheme, TextField, ThemeProvider } from "@material-ui/core";
 import React, { useCallback } from "react";
 import "./Header.css";
-import MenuItem from "@material-ui/core/MenuItem";
-import countries from "../../data/category";
 import { debounce } from "lodash";
 
-const Header = ({
-	category,
-	setCategory,
-	setWord,
-	word,
-	setMeanings,
-	LightTheme,
-}) => {
-	const darkTheme = createMuiTheme({
+const Header = ({ setWord, darkTheme }) => {
+	const lightTheme = createMuiTheme({
 		palette: {
 			primary: {
-				main: LightTheme ? "#000" : "#fff",
+				main: darkTheme ? "#fff" : "#000",
 			},
-			type: LightTheme ? "light" : "dark",
+			type: darkTheme ? "dark" : "light",
 		},
 	});
-
-	const handleChange = (e) => {
-		setCategory(e.target.value);
-		setWord("");
-		setMeanings([]);
-	};
 
 	// eslint-disable-next-line react-hooks/exhaustive-deps
 	const deb = useCallback(
@@ -40,31 +25,17 @@ const Header = ({
 
 	return (
 		<div className='header'>
-			<span className='title'>
-				<h3>English Dictionary</h3>
-			</span>
+			<span className='title'>English Dictionary</span>
 			<div className='inputs'>
-				<ThemeProvider theme={darkTheme}>
+				<ThemeProvider theme={lightTheme}>
 					<TextField
 						className='search'
 						id='filled-basic'
 						// value={word}
 						label='Search a Word'
+						variant='filled'
 						onChange={(e) => handleText(e.target.value)}
 					/>
-					<TextField
-						select
-						label='Language'
-						value={category}
-						onChange={(e) => handleChange(e)}
-						className='select'
-					>
-						{countries.map((option) => (
-							<MenuItem key={option.label} value={option.label}>
-								{option.value}
-							</MenuItem>
-						))}
-					</TextField>
 				</ThemeProvider>
 			</div>
 		</div>
